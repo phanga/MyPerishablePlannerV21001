@@ -41,7 +41,7 @@ Archana Thapa, Jacob Farrish, Austin Kirk, Gabriel Phan, Matthew Abbott
 
 - DevOps/Product Owner/Scrum Master: Gabriel Phan
 - UI Specialist: Archana Thapa & Jacob Farrish
-- Integration Specialist: Matthew Abbott
+- Integration Specialist: Matthew Abbott & Austin Kirk
 
 ## Weekly Meeting
 
