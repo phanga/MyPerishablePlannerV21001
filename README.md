@@ -1,4 +1,4 @@
-# MyPerishablePlanner
+# My Perishable Planner
 
 Design Document
 
