@@ -53,4 +53,5 @@ Use your Android Device to log an item via picture,barcode, or name. Enter an ex
 ## Weekly Meeting
 
 Tuesday and Thursday @ 7:30 pm
+
 https://discord.gg/s42A6MCC
