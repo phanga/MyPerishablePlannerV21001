@@ -44,6 +44,13 @@ Use your Android Device to log an item via picture,barcode, or name. Enter an ex
 
 ### Class Diagram Description
 
+- MainActivity: This is the main screen that the user views when starting the application. It consists of a list of items they have entered arranged by the date in which they go bad.
+- RetroFitClientInstance: This is just a bootstrap instance that is required to make retrofit work properly.
+- ExpirationDetailActivity: A screen that opens when a specific perishable is selected. It shows a more detailed insight of the item, mainly its expiration date.
+- IPerishableDAO: Interface that allows RetroFit to find and parse Perishable JSON
+- IExpirationDAO: Interface for Room to connect Expiration data
+- Perishable: Noun class representing the perishable item
+- Expiration: Noun class representing the items expiration details
 
 ## Scrum Roles
 
