@@ -66,7 +66,7 @@ The device has a QR/Barcode reader, user has given access to the camera.
 
 #### Assumptions
 
-Product is entered in the app already
+Product is entered in the app already.
 
 #### Examples
 
@@ -77,6 +77,14 @@ Product is entered in the app already
 **When**   I scan the barcode with my phone
 
 **Then**   then I can see the date at which the bread I have at home expires
+
+2.2
+
+**Given**  that I grab eggs in the store
+
+**When**   when I scan the barcode with my phone
+
+**Then**   I can see the date at which the eggs I have at home go bad
 
 ## Class Diagram
 
