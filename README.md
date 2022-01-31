@@ -66,7 +66,7 @@ The device has a QR/Barcode reader, user has given access to the camera.
 
 #### Assumptions
 
-Product is entered in the app already.
+Product is entered in the app.
 
 #### Examples
 
