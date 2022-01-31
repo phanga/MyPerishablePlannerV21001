@@ -20,24 +20,63 @@ Use your Android Device to log an item via picture,barcode, or name. Enter an ex
 ![storyboard_Expiration jpg](https://user-images.githubusercontent.com/83916583/151725052-1169ad71-f04e-4be2-bd54-57cfdd457223.png)
 ## Functional Requirements
 
-### Requirement
+### Requirement #1
 
 #### Scenario
 
-
+As a user, I want to receive a text message when something goes bad, so that I can replace it at the store.
 
 #### Dependencies
 
-
+Notifications are enabled.
 
 #### Assumptions
 
+The notifications are sent via text.
 
-
-
+Milk will go bad, text will be sent.
 
 #### Examples
 
+1.1
+
+**Given**  that my jelly expires on 2/1/2022
+
+**When**   it becomes 2/2/2022
+
+**Then**  I will receive a text message alerting me to get more jelly
+
+1.2
+
+**Given**  that my lunchmeat expires a week from today
+
+**When**   eight days pass
+
+**Then**   I will receive a text message alerting me to throw out the lunchmeat
+
+### Requirement #2
+
+#### Scenario
+
+As a user, I want to scan a product at the store, so that I can see if my item at home will expire soon.
+
+#### Dependencies
+
+The device has a QR/Barcode reader, user has given access to the camera.
+
+#### Assumptions
+
+Product is entered in the app already
+
+#### Examples
+
+2.1
+
+**Given**  that I grab bread in the store
+
+**When**   I scan the barcode with my phone
+
+**Then**   then I can see the date at which the bread I have at home expires
 
 ## Class Diagram
 
