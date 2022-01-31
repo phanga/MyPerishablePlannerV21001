@@ -41,6 +41,7 @@ Use your Android Device to log an item via picture,barcode, or name. Enter an ex
 
 ## Class Diagram
 
+![diagram1](https://user-images.githubusercontent.com/97859319/151725647-71096518-1fd8-420e-a3b8-6d3e14dec8b7.png)
 
 ### Class Diagram Description
 
