@@ -110,4 +110,3 @@ Product is entered in the app.
 
 Tuesday and Thursday @ 7:30 pm
 
-https://discord.gg/s42A6MCC
