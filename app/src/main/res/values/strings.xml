@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">My Perishable Planner</string>
+    <string name="itemName">Item Name</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="expirationDate">Expiration Date</string>
 </resources>
