@@ -52,16 +52,16 @@ fun ExpirationFacts (name: String) {
         )
 
         OutlinedTextField(
-            value = category,
-            onValueChange = { category = it },
-            label = { Text(text = stringResource(R.string.category)) },
+            value = description,
+            onValueChange = { description = it },
+            label = { Text(text = stringResource(R.string.description)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
-            value = description,
+            value = category,
             onValueChange = { category = it },
-            label = { Text(text = stringResource(R.string.description)) },
+            label = { Text(text = stringResource(R.string.category)) },
             modifier = Modifier.fillMaxWidth()
         )
 
