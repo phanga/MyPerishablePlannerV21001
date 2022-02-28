@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
             MyPerishablePlannerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
-                    ExpirationFacts("Android")
+                    ExpirationFacts()
                 }
             }
         }
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ExpirationFacts (name: String) {
+fun ExpirationFacts () {
     var itemName by remember { mutableStateOf(value = "")}
     var category by remember { mutableStateOf(value = "")}
     var expirationDate by remember { mutableStateOf(value = "")}
@@ -93,7 +93,7 @@ fun DefaultPreview() {
     MyPerishablePlannerTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
-            ExpirationFacts("Android")
+            ExpirationFacts()
         }
     }
 }
