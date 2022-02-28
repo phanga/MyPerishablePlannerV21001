@@ -12,12 +12,14 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.myperishableplanner.v21001.ui.theme.MyPerishablePlannerTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +49,7 @@ fun ExpirationFacts (name: String) {
             value = itemName,
             onValueChange = { itemName = it },
             label = { Text(text = stringResource(R.string.itemName)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
 
         )
 
@@ -55,14 +57,14 @@ fun ExpirationFacts (name: String) {
             value = description,
             onValueChange = { description = it },
             label = { Text(text = stringResource(R.string.description)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
 
         OutlinedTextField(
             value = category,
             onValueChange = { category = it },
             label = { Text(text = stringResource(R.string.category)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
 
 
@@ -70,14 +72,14 @@ fun ExpirationFacts (name: String) {
             value = expirationDate,
             onValueChange = { expirationDate = it },
             label = { Text(text = stringResource(R.string.expirationDate)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         )
 
         Button(
             onClick = {
                 Toast.makeText(context, "$itemName $description $category $expirationDate", Toast.LENGTH_LONG)
                     .show()
-            }){Text(text = "Save")}
+            },content = {Text(text = "save")}, modifier = Modifier.padding(8.dp))
 
     }
 
