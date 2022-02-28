@@ -5,14 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -28,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyPerishablePlannerTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
+                Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
                     ExpirationFacts()
                 }
             }
