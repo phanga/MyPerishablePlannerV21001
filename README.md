@@ -108,5 +108,5 @@ Product is entered in the app.
 
 ## Weekly Meeting
 
-Tuesday and Thursday @ 7:30 pm
+Monday and Wednesday @ 7:30 pm
 
