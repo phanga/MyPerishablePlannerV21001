@@ -1,3 +1,5 @@
 package com.myperishableplanner.v21001.dto
 
-data class Item()
+import java.util.*
+
+data class Item(val name: String, val category: String, val expirationDate: Date, val description: String)
