@@ -6,11 +6,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -26,8 +21,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyPerishablePlannerTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
-                    ExpirationFacts("Android")
+                Surface(
+                    color = MaterialTheme.colors.background,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    expirationFacts("Android")
                 }
             }
         }
@@ -35,11 +33,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ExpirationFacts (name: String) {
-    var itemName by remember { mutableStateOf(value = "")}
-    var category by remember { mutableStateOf(value = "")}
-    var expirationDate by remember { mutableStateOf(value = "")}
-    var description by remember { mutableStateOf(value = "")}
+fun expirationFacts(name: String) {
+    var itemName by remember { mutableStateOf(value = "") }
+    var category by remember { mutableStateOf(value = "") }
+    var expirationDate by remember { mutableStateOf(value = "") }
+    var description by remember { mutableStateOf(value = "") }
     val context = LocalContext.current
 
     Column {
@@ -75,23 +73,27 @@ fun ExpirationFacts (name: String) {
 
         Button(
             onClick = {
-                Toast.makeText(context, "$itemName $description $category $expirationDate", Toast.LENGTH_LONG)
+                Toast.makeText(
+                    context,
+                    "$itemName $description $category $expirationDate",
+                    Toast.LENGTH_LONG
+                )
                     .show()
-            }){Text(text = "Save")}
+            }) { Text(text = "Save") }
 
     }
 
 
 }
 
-@Preview(name="Light mode")
-@Preview(uiMode=Configuration.UI_MODE_NIGHT_YES,showBackground = true, name = "Dark Mode")
+@Preview(name = "Light mode")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
 @Composable
-fun DefaultPreview() {
+fun defaultPreview() {
     MyPerishablePlannerTheme {
         // A surface container using the 'background' color from the theme
-        Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
-            ExpirationFacts("Android")
+        Surface(color = MaterialTheme.colors.background, modifier = Modifier.fillMaxWidth()) {
+            expirationFacts("Android")
         }
     }
 }
