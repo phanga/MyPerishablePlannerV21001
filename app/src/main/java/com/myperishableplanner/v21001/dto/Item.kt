@@ -4,4 +4,4 @@ data class Item(
     var itemName: String = "",
     var catergory:String = "",
     var expirationDate: String = "",
-    var Description: String = "")
+    var description: String = "")
