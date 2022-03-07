@@ -29,6 +29,15 @@ private val LightColorPalette = lightColors(
     onSurface = Color.Black,
     */
 )
+private val CoolPastelColorPalette = CoolPastel(
+    primary = AeroBlue ,
+    primaryVariant = MintGreen,
+    secondary = PowderBlue,
+    background =  Cerulean,
+    surface = PlatinumGrey
+)
+
+
 
 @Composable
 fun MyPerishablePlannerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
