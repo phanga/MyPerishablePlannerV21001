@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.ui.theme.MyPerishablePlannerTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +42,7 @@ fun ExpirationFacts (name: String) {
     var expirationDate by remember { mutableStateOf(value = "")}
     var description by remember { mutableStateOf(value = "")}
     val context = LocalContext.current
+    var product = Item( productName = "", life = "", description = "")
 
     Column {
         OutlinedTextField(
