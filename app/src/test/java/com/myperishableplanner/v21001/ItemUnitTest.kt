@@ -22,6 +22,7 @@ class ItemUnitTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
+
     lateinit var itemService: ItemService
     lateinit var mvm: ItemViewModel
 
@@ -42,6 +43,13 @@ class ItemUnitTest {
         Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
         mainThreadSurrogate.close()
     }
+    @Test
+    fun `given a item dto when id is 454004 and name is apple then code is 454004 and name is apple`() {
+        var item = Item(454004, "APPLE","TREECRISP 2 GO")
+        Assert.assertTrue(item.id.equals(454004))
+        Assert.assertTrue(item.name.equals("APPLE"))
+        Assert.assertTrue(item.brand.equals("TREECRISP 2 GO"))
+    }
 
     @Test
     fun `given a view model with live data when populated with item then results should contain Milk`() {
@@ -52,7 +60,7 @@ class ItemUnitTest {
 
     private fun givenViewModelIsInitializedWithMockData() {
         val items = ArrayList<Item>()
-        items.add(Item(1, "Milk"))
+        items.add(Item(1, "Milk", "Milk"))
         coEvery {mockItemService.fetchItems()} returns items
 
         mvm.itemService =mockItemService
@@ -77,7 +85,11 @@ class ItemUnitTest {
 
         latch.await(1, TimeUnit.SECONDS)
         Assert.assertNotNull(allItems)
-        Assert.assertTrue(allItems!!.contains(Item(1, "Milk")))
+        Assert.assertTrue(allItems!!.contains(Item(1, "Milk","Milk")))
 
     }
+
+
+
+
 }
