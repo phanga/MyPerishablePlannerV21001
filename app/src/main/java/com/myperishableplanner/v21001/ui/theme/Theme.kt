@@ -29,6 +29,7 @@ private val LightColorPalette = lightColors(
     onSurface = Color.Black,
     */
 )
+/*
 private val CoolPastelColorPalette = CoolPastel(
     primary = AeroBlue ,
     primaryVariant = MintGreen,
@@ -36,6 +37,7 @@ private val CoolPastelColorPalette = CoolPastel(
     background =  Cerulean,
     surface = PlatinumGrey
 )
+*/
 
 
 
