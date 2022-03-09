@@ -35,8 +35,6 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
                     ExpirationFacts("Android")
                 }
-                var foo = items
-                var i= 1+1
             }
         }
     }
