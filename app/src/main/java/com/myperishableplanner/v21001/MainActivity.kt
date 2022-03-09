@@ -19,16 +19,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.myperishableplanner.v21001.ui.theme.MyPerishablePlannerTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.compose.runtime.livedata.observeAsState
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel : ItemViewModel by viewModel <ItemViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            viewModel.fetchItems()
+            val items by viewModel.items.observeAsState(initial = emptyList())
             MyPerishablePlannerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
                     ExpirationFacts("Android")
                 }
+                var foo = items
+                var i= 1+1
             }
         }
     }
