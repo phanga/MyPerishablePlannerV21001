@@ -40,6 +40,7 @@ fun ExpirationFacts (name: String) {
     var category by remember { mutableStateOf(value = "")}
     var expirationDate by remember { mutableStateOf(value = "")}
     var description by remember { mutableStateOf(value = "")}
+    var clear by remember { mutableStateOf(value = "")}
     val context = LocalContext.current
 
     Column {
@@ -78,11 +79,20 @@ fun ExpirationFacts (name: String) {
                 Toast.makeText(context, "$itemName $description $category $expirationDate", Toast.LENGTH_LONG)
                     .show()
             }){Text(text = "Save")}
+        Button(
+            onClick = {
+                Toast.makeText(context, "$itemName=$clear $description=$clear $category=$clear $expirationDate=$clear", Toast.LENGTH_LONG)
+                    .show()
+            }){Text(text = "Clear")}
 
     }
 
 
+
+
 }
+
+
 
 @Preview(name="Light mode")
 @Preview(uiMode=Configuration.UI_MODE_NIGHT_YES,showBackground = true, name = "Dark Mode")
