@@ -84,6 +84,10 @@ fun ExpirationFacts (name: String) {
                 Toast.makeText(context, "$itemName=$clear $description=$clear $category=$clear $expirationDate=$clear", Toast.LENGTH_LONG)
                     .show()
             }){Text(text = "Clear")}
+        Button(
+            onClick = {
+
+            }){Text(text = "Exit")}
 
     }
 
