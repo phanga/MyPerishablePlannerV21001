@@ -28,14 +28,16 @@ private val LightColorPalette = lightColors(
     onBackground = Color.Black,
     onSurface = Color.Black,
     */
-//)
-//private val CoolPastelColorPalette = CoolPastel(
-    //primary = AeroBlue ,
-    //primaryVariant = MintGreen,
-    //secondary = PowderBlue,
-   // background =  Cerulean,
-   // surface = PlatinumGrey
-//)
+)
+/*
+private val CoolPastelColorPalette = CoolPastel(
+    primary = AeroBlue ,
+    primaryVariant = MintGreen,
+    secondary = PowderBlue,
+    background =  Cerulean,
+    surface = PlatinumGrey
+)
+*/
 
 
 
@@ -46,7 +48,6 @@ fun MyPerishablePlannerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content
     } else {
         LightColorPalette
     }
-
 
     MaterialTheme(
             colors = colors,
