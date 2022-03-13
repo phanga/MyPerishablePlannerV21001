@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                Toast.makeText(context, "Selected Country $strSelectedItem", Toast.LENGTH_LONG)
+                Toast.makeText(context, "Selected Product $strSelectedItem", Toast.LENGTH_LONG)
                     .show()
             },
             modifier = Modifier.padding(all = Dp(10F)),
@@ -165,11 +165,12 @@ class MainActivity : ComponentActivity() {
                     }
                     }
 
-                }
+            }
             }
 
         }
     }
+
 
 
     @Composable
@@ -190,8 +191,9 @@ class MainActivity : ComponentActivity() {
             dropDownOptions.value = itemsIn.filter {
                 it.toString().startsWith(value.text) && it.toString() != value.text
             }.take(10)
-        }
 
+
+        }
         TextFieldWithDropdown(
             modifier = Modifier.fillMaxWidth(),
             value = textFieldValue.value,
@@ -199,9 +201,10 @@ class MainActivity : ComponentActivity() {
             onDismissRequest = ::onDropdownDismissRequest,
             dropDownExpanded = dropDownExpanded.value,
             list = dropDownOptions.value,
-            label = label
+            label = "Item"
         )
     }
+
 
     @Composable
     fun TextFieldWithDropdown(
