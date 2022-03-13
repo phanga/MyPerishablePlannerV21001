@@ -4,4 +4,6 @@
     <string name="category">Category</string>
     <string name="description">Description</string>
     <string name="expirationDate">Expiration Date</string>
+    <string name="ItemName">Item Name</string>
+    <string name="StorageInstruction">Storage Instruction</string>
 </resources>
