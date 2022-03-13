@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                Toast.makeText(context, "Selected Country $strSelectedItem", Toast.LENGTH_LONG)
+                Toast.makeText(context, "Selected Item $strSelectedItem", Toast.LENGTH_LONG)
                     .show()
             },
             modifier = Modifier.padding(all = Dp(10F)),
@@ -165,19 +165,7 @@ class MainActivity : ComponentActivity() {
                     }
                     }
 
-            }){Text(text = "Save")}
-        Button(
-            onClick = {
-                Toast.makeText(context, "$itemName=$clear $description=$clear $category=$clear $expirationDate=$clear", Toast.LENGTH_LONG)
-                    .show()
-            }){Text(text = "Clear")}
-        Button(
-            onClick = {
-                Toast.makeText(context, "$itemName=$clear $description=$clear $category=$clear $expirationDate=$clear", Toast.LENGTH_LONG)
-                    .show()
-            }){Text(text = "Clear")}
-
-                }
+            }
             }
 
         }
@@ -205,22 +193,7 @@ class MainActivity : ComponentActivity() {
             }.take(10)
 
 
-
-}
-
-
-
-@Preview(name="Light mode")
-@Preview(uiMode=Configuration.UI_MODE_NIGHT_YES,showBackground = true, name = "Dark Mode")
-@Composable
-fun DefaultPreview() {
-    MyPerishablePlannerTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
-            ExpirationFacts("Android")
-
         }
-
         TextFieldWithDropdown(
             modifier = Modifier.fillMaxWidth(),
             value = textFieldValue.value,
@@ -228,9 +201,10 @@ fun DefaultPreview() {
             onDismissRequest = ::onDropdownDismissRequest,
             dropDownExpanded = dropDownExpanded.value,
             list = dropDownOptions.value,
-            label = label
+            label = "Item"
         )
     }
+
 
     @Composable
     fun TextFieldWithDropdown(
