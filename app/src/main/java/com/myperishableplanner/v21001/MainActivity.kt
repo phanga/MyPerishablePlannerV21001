@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                Toast.makeText(context, "Selected Item $strSelectedItem", Toast.LENGTH_LONG)
+                Toast.makeText(context, "Selected Product $strSelectedItem", Toast.LENGTH_LONG)
                     .show()
             },
             modifier = Modifier.padding(all = Dp(10F)),
