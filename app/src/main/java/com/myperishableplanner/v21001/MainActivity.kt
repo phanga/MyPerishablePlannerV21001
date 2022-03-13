@@ -165,11 +165,24 @@ class MainActivity : ComponentActivity() {
                     }
                     }
 
+            }){Text(text = "Save")}
+        Button(
+            onClick = {
+                Toast.makeText(context, "$itemName=$clear $description=$clear $category=$clear $expirationDate=$clear", Toast.LENGTH_LONG)
+                    .show()
+            }){Text(text = "Clear")}
+        Button(
+            onClick = {
+                Toast.makeText(context, "$itemName=$clear $description=$clear $category=$clear $expirationDate=$clear", Toast.LENGTH_LONG)
+                    .show()
+            }){Text(text = "Clear")}
+
                 }
             }
 
         }
     }
+
 
 
     @Composable
@@ -190,6 +203,22 @@ class MainActivity : ComponentActivity() {
             dropDownOptions.value = itemsIn.filter {
                 it.toString().startsWith(value.text) && it.toString() != value.text
             }.take(10)
+
+
+
+}
+
+
+
+@Preview(name="Light mode")
+@Preview(uiMode=Configuration.UI_MODE_NIGHT_YES,showBackground = true, name = "Dark Mode")
+@Composable
+fun DefaultPreview() {
+    MyPerishablePlannerTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = MaterialTheme.colors.background , modifier = Modifier.fillMaxWidth()) {
+            ExpirationFacts("Android")
+
         }
 
         TextFieldWithDropdown(
