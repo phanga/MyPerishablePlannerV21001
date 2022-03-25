@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "525862670759",
+    "project_id": "myperishableplanner",
+    "storage_bucket": "myperishableplanner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525862670759:android:d302c173877c926f53a682",
+        "android_client_info": {
+          "package_name": "com.myperishableplanner.v21001"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525862670759-s7hummrjr7l5bkk2gusa4un6lq8tov46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC08vN86t0sMlTJIq5jQswNqLSnvX3gDfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525862670759-s7hummrjr7l5bkk2gusa4un6lq8tov46.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
