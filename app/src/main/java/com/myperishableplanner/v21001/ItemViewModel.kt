@@ -7,9 +7,18 @@ import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.service.IItemService
 import com.myperishableplanner.v21001.service.ItemService
 import kotlinx.coroutines.launch
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.FirebaseFirestore
+
+
 
 class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel() {
+
+
         var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
+
+        private lateinit var firestore : FirebaseFirestore
+
         fun fetchItems(){
             viewModelScope.launch {
                 items.postValue(itemService.fetchItems())
