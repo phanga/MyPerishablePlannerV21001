@@ -35,9 +35,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.myperishableplanner.v21001.dto.Category
 import com.myperishableplanner.v21001.dto.Item
+import com.myperishableplanner.v21001.dto.ItemDetail
 
 class MainActivity : ComponentActivity() {
 
+    private var selectedItem: Item ? = null
     private var selectedCategory : Category? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,11 +84,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    var strSelectedItem = "No item selected"
+    var inItemName = "No item selected"
     var selecteItem = Item(0, "", "")
 
     @Composable
-    fun ButtonBar()
+    fun ButtonBar(inCategory : String ,inDescription : String ,inExpirationDate : String)
     {
         Row(modifier = Modifier.padding(all = 2.dp)) {
         }
@@ -94,7 +96,16 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                Toast.makeText(context, "Selected Product $strSelectedItem", Toast.LENGTH_LONG)
+                var itemDetail = ItemDetail().apply{
+                    itemId =  selectedItem?.let { it.id }?:0
+                    itemName = inItemName
+                    description = inDescription
+                    expirationDate = inExpirationDate
+                    category = inCategory
+
+                }
+                viewModel.saveItemDetail(itemDetail)
+                Toast.makeText(context, "Selected Product $inItemName", Toast.LENGTH_LONG)
                     .show()
             },
             modifier = Modifier.padding(all = Dp(10F)),
@@ -107,30 +118,37 @@ class MainActivity : ComponentActivity() {
     }
     @Composable
     fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), Categories : List<Category> = ArrayList<Category>()) {
-        var category by remember { mutableStateOf(value = "") }
-        var expirationDate by remember { mutableStateOf(value = "") }
-        var storageInstruction by remember { mutableStateOf(value = "") }
+        var inCategory by remember { mutableStateOf(value = "") }
+        var inDescription by remember { mutableStateOf(value = "") }
+        var inExpirationDate by remember { mutableStateOf(value = "") }
         val context = LocalContext.current
         Column {
 
             TextFieldWithDropdownUsage(itemsIn = items, stringResource(R.string.ItemName))
-            CatogerySpinner(categories= Categories)
+                // CatogerySpinner(categories= Categories)
             //
             OutlinedTextField(
-                value = storageInstruction,
-                onValueChange = { storageInstruction = it },
-                label = { Text(text = stringResource(R.string.StorageInstruction)) },
+                value = inDescription,
+                onValueChange = { inDescription = it },
+                label = { Text(text = stringResource(R.string.description)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = expirationDate,
-                onValueChange = { expirationDate = it },
+                value = inCategory,
+                onValueChange = { inCategory = it },
+                label = { Text(text = stringResource(R.string.category)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = inExpirationDate,
+                onValueChange = { inExpirationDate = it },
                 label = { Text(text = stringResource(R.string.expirationDate)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            ButtonBar()
+            ButtonBar(inCategory,inDescription,inExpirationDate)
 
         }
 
@@ -185,7 +203,7 @@ class MainActivity : ComponentActivity() {
         }
 
         fun onValueChanged(value: TextFieldValue) {
-            strSelectedItem = value.text
+            inItemName = value.text
             dropDownExpanded.value = true
             textFieldValue.value = value
             dropDownOptions.value = itemsIn.filter {
@@ -238,16 +256,17 @@ class MainActivity : ComponentActivity() {
                 ),
                 onDismissRequest = onDismissRequest
             ) {
-                list.forEach { text ->
+                list.forEach { item ->
                     DropdownMenuItem(onClick = {
                         setValue(
                             TextFieldValue(
-                                text.toString(),
-                                TextRange(text.toString().length)
+                                item.toString(),
+                                TextRange(item.toString().length)
                             )
                         )
+                        selectedItem = item
                     }) {
-                        Text(text = text.toString())
+                        Text(text = item.toString())
                     }
                 }
             }
