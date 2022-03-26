@@ -1,7 +1,7 @@
 package com.myperishableplanner.v21001
 
-import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,12 +33,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.myperishableplanner.v21001.dto.Category
 import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.dto.ItemDetail
 
 class MainActivity : ComponentActivity() {
 
+    private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
     private var selectedCategory : Category? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
@@ -88,7 +94,7 @@ class MainActivity : ComponentActivity() {
     var selecteItem = Item(0, "", "")
 
     @Composable
-    fun ButtonBar(inCategory : String ,inDescription : String ,inExpirationDate : String)
+    fun SaveButton(inCategory : String, inDescription : String, inExpirationDate : String)
     {
         Row(modifier = Modifier.padding(all = 2.dp)) {
         }
@@ -116,6 +122,60 @@ class MainActivity : ComponentActivity() {
             Text(text = "Save", color = Color.White)
         }
     }
+
+    @Composable
+    fun AuthenticationButton()
+    {
+        Row(modifier = Modifier.padding(all = 2.dp)) {
+        }
+
+        val context = LocalContext.current
+        Button(
+            onClick = {
+                SignIn ()
+
+            },
+            modifier = Modifier.padding(all = Dp(10F)),
+            enabled = true,
+            border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
+            shape = MaterialTheme.shapes.medium,
+        ) {
+            Text(text = "Logon", color = Color.White)
+        }
+    }
+
+    private fun SignIn() {
+        val providers = arrayListOf(
+           AuthUI.IdpConfig.EmailBuilder().build()
+        )
+        val signinIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
+
+        signInLauncher.launch(signinIntent)
+    }
+
+    private val signInLauncher = registerForActivityResult(
+        FirebaseAuthUIActivityResultContract())
+    {
+
+        res -> this.signInResult(res)
+    }
+
+    private fun signInResult (result : FirebaseAuthUIAuthenticationResult)
+    {
+       val response = result.idpResponse
+       if (result.resultCode== RESULT_OK) {
+         firebaseUser =  FirebaseAuth.getInstance().currentUser
+       }
+        else
+       {
+           Log.e("MainActivity.kt","Error logging in" + response?.error?.errorCode)
+       }
+    }
+
+
     @Composable
     fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), Categories : List<Category> = ArrayList<Category>()) {
         var inCategory by remember { mutableStateOf(value = "") }
@@ -148,7 +208,8 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            ButtonBar(inCategory,inDescription,inExpirationDate)
+            SaveButton(inCategory,inDescription,inExpirationDate)
+            AuthenticationButton()
 
         }
 
