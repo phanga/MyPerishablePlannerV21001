@@ -34,7 +34,11 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         }
 
     fun saveItemDetail(itemDetail: ItemDetail) {
-        val document = firestore.collection("itemDetail").document()
+        val document = if (itemDetail.itemDetailId == null || itemDetail.itemDetailId.isEmpty()) {
+            firestore.collection("itemDetail").document()
+        } else {
+            firestore.collection("itemDetail").document(itemDetail.itemDetailId)
+        }
         itemDetail.itemDetailId = document.id
         document.set (itemDetail)
         val handle = document.set (itemDetail)
