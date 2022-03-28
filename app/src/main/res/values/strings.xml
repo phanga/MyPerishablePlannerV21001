@@ -6,4 +6,5 @@
     <string name="expirationDate">Expiration Date</string>
     <string name="ItemName">Item Name</string>
     <string name="StorageInstruction">Storage Instruction</string>
+    <string name="cameraPermissionDenied">Unable to load camera without permission</string>
 </resources>
