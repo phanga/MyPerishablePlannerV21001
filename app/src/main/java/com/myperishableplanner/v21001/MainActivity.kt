@@ -65,7 +65,6 @@ class MainActivity : ComponentActivity() {
 
                     ) {
                         ExpirationFacts(items,categories)
-
                     }
 
                 }
@@ -208,9 +207,10 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            SaveButton(inCategory,inDescription,inExpirationDate)
-            AuthenticationButton()
-
+            Row{
+                SaveButton(inCategory,inDescription,inExpirationDate)
+                AuthenticationButton()
+            }
         }
 
     }
