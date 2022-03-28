@@ -216,7 +216,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private @Composable
-    fun CatogerySpinner(categories: List<Category>) {
+    fun CategorySpinner(categories: List<Category>) {
         var itemText by remember { mutableStateOf("Select Category")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
@@ -333,9 +333,6 @@ class MainActivity : ComponentActivity() {
             }
 
         }
-
-
-
     }
 }
 
