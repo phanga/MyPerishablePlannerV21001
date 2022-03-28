@@ -21,10 +21,8 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         private lateinit var firestore : FirebaseFirestore
 
         init {
-            {
-                firestore = FirebaseFirestore.getInstance()
-                firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-            }
+            firestore = FirebaseFirestore.getInstance()
+            firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
         }
 
         fun fetchItems(){
