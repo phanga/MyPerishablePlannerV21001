@@ -1,8 +1,12 @@
 package com.myperishableplanner.v21001
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -37,6 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import coil.compose.AsyncImage
+
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -45,13 +52,20 @@ import com.google.firebase.auth.FirebaseUser
 import com.myperishableplanner.v21001.dto.Category
 import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.dto.ItemDetail
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : ComponentActivity() {
 
+    private var uri: Uri? = null
+    private var currentImagePath: String = ""
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
     private var selectedCategory : Category? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
+    private var strUri by mutableStateOf("")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -163,6 +177,7 @@ class MainActivity : ComponentActivity() {
         ) {
             Text(text = "Photo", color = Color.White)
         }
+        AsyncImage(model = strUri, contentDescrption = "Item Image")
     }
 
     private fun TakePhoto() {
@@ -194,9 +209,42 @@ class MainActivity : ComponentActivity() {
         }
     }
     private fun invokeCamera() {
-        TODO("Not yet implemented")
+        val file = createImageFile()
+        try {
+
+
+            uri = FileProvider.getUriForFile(
+                this,
+                "com.myperishableplanner.v21001.fileprovider",
+                file
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            var foo = e.message
+        }
+        getCameraImage.launch(uri)
     }
 
+    private fun createImageFile() : File {
+    val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "Item_${timestamp}",
+            ".jpg",
+            imageDirectory
+        ).apply{
+            currentImagePath = absolutePath
+        }
+    }
+    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()){
+        success ->
+        if (success) {
+            Log.i(TAG, "Image Location : $uri")
+            strUri = uri.toString()
+        } else {
+            Log.e(TAG, "Image not saved. $uri")
+        }
+    }
     fun hasCameraPermission() = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
     fun hasExternalStoragePermission() = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private fun SignIn() {
