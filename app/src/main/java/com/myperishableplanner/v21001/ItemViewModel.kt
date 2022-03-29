@@ -15,23 +15,20 @@ import com.myperishableplanner.v21001.dto.ItemDetail
 
 class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel() {
 
+    var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
 
-        var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
+    private lateinit var firestore : FirebaseFirestore
 
-        private lateinit var firestore : FirebaseFirestore
+    init {
+        firestore = FirebaseFirestore.getInstance()
+        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
+    }
 
-        init {
-            {
-                firestore = FirebaseFirestore.getInstance()
-                firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-            }
+    fun fetchItems(){
+        viewModelScope.launch {
+            items.postValue(itemService.fetchItems())
         }
-
-        fun fetchItems(){
-            viewModelScope.launch {
-                items.postValue(itemService.fetchItems())
-            }
-        }
+    }
 
     fun saveItemDetail(itemDetail: ItemDetail) {
         val document = if (itemDetail.itemDetailId == null || itemDetail.itemDetailId.isEmpty()) {
