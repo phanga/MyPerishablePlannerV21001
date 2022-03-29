@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
-    private var selectedCategory : Category? = null
+    private var selectedCategory: Category? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
     var selecteItem = Item(0, "", "")
 
     @Composable
-    fun SaveButton(inCategory : String, inDescription : String, inExpirationDate : String)
+    fun SaveButton(inCategory: String, inDescription: String, inExpirationDate: String)
     {
         Row(modifier = Modifier.padding(all = 2.dp)) {
         }
@@ -163,7 +163,7 @@ class MainActivity : ComponentActivity() {
         res -> this.signInResult(res)
     }
 
-    private fun signInResult (result : FirebaseAuthUIAuthenticationResult)
+    private fun signInResult (result: FirebaseAuthUIAuthenticationResult)
     {
        val response = result.idpResponse
        if (result.resultCode== RESULT_OK) {
@@ -177,7 +177,7 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), Categories : List<Category> = ArrayList<Category>()) {
+    fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), Categories: List<Category> = ArrayList<Category>()) {
         var inCategory by remember { mutableStateOf(value = "") }
         var inDescription by remember { mutableStateOf(value = "") }
         var inExpirationDate by remember { mutableStateOf(value = "") }

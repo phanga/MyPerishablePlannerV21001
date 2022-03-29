@@ -6,5 +6,5 @@ import retrofit2.Call
 
 interface IItemDAO {
     @GET("fdc/v1/foods/list?api_key=but9Hwci1MFrkr6A3RXH0o7kgO9gjbHfgl01U2JC&query=apple")
-    fun getAllItems() : Call<List<Item>>
+    fun getAllItems(): Call<List<Item>>
 }

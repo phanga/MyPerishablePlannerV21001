@@ -10,11 +10,11 @@ import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
 
 interface IItemService {
-    suspend fun fetchItems() : List<Item>?
+    suspend fun fetchItems(): List<Item>?
 }
 
 class ItemService : IItemService {
-    override suspend fun fetchItems() : List <Item>? {
+    override suspend fun fetchItems(): List <Item>? {
         return withContext(Dispatchers.IO) {
             val service = RetrofitClientInstance.retrofitInstance?.create(IItemDAO::class.java)
             val items = async { service?.getAllItems()}

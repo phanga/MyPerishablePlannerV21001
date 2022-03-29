@@ -13,11 +13,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.myperishableplanner.v21001.dto.ItemDetail
 
 
-class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel() {
+class ItemViewModel (var itemService: IItemService = ItemService()) : ViewModel() {
 
-    var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
+    var items: MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
 
-    private lateinit var firestore : FirebaseFirestore
+    private lateinit var firestore: FirebaseFirestore
 
     init {
         firestore = FirebaseFirestore.getInstance()

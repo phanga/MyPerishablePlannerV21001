@@ -9,7 +9,7 @@ object RetrofitClientInstance {
     private var retrofit: Retrofit? = null;
     private val BASE_URL = "https://api.nal.usda.gov"
 
-    val retrofitInstance : Retrofit?
+    val retrofitInstance: Retrofit?
         get() {
             // has this object been created yet?
             if (retrofit == null) {
