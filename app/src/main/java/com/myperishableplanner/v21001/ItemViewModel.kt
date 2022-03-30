@@ -29,7 +29,10 @@ class ItemViewModel (var itemService: IItemService = ItemService()) : ViewModel(
 
     fun fetchItems(){
         viewModelScope.launch {
-            items.postValue(itemService.fetchItems(searchText))
+            val results = itemService.fetchItems(searchText)
+            results?.let {
+                items.postValue(it)
+            }
         }
     }
 
