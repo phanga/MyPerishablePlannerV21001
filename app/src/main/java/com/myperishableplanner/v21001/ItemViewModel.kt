@@ -16,17 +16,20 @@ import com.myperishableplanner.v21001.dto.ItemDetail
 class ItemViewModel (var itemService: IItemService = ItemService()) : ViewModel() {
 
     var items: MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
+    var searchText = "apple"
 
     private lateinit var firestore: FirebaseFirestore
 
-    init {
-        firestore = FirebaseFirestore.getInstance()
-        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-    }
+        init {
+            {
+                firestore = FirebaseFirestore.getInstance()
+                firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
+            }
+        }
 
     fun fetchItems(){
         viewModelScope.launch {
-            items.postValue(itemService.fetchItems())
+            items.postValue(itemService.fetchItems(searchText))
         }
     }
 

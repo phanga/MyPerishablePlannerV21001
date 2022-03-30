@@ -69,7 +69,7 @@ class ItemUnitTest {
     private fun givenViewModelIsInitializedWithMockData() {
         val items = ArrayList<Item>()
         items.add(Item(1, "Milk", "Milk"))
-        coEvery {mockItemService.fetchItems()} returns items
+        coEvery {mockItemService.fetchItems("apple")} returns items
 
         mvm.itemService =mockItemService
     }

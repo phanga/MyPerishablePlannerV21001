@@ -30,7 +30,7 @@ class ItemTest {
 
     private suspend fun whenItemDataAreReadAndParsed()
     {
-        allItems= itemService.fetchItems()
+        allItems = itemService.fetchItems("apple")
     }
 
     private fun thenTheItemCollectionShouldContainApple()
