@@ -12,26 +12,20 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.FirebaseFirestore
 import com.myperishableplanner.v21001.dto.ItemDetail
 
-
 class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel() {
 
+    private var firestore : FirebaseFirestore = FirebaseFirestore.getInstance()
+    var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
 
-        var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
-
-        private lateinit var firestore : FirebaseFirestore
-
-        init {
-            {
-                firestore = FirebaseFirestore.getInstance()
-                firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-            }
+    init {
+        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
         }
 
-        fun fetchItems(){
-            viewModelScope.launch {
-                items.postValue(itemService.fetchItems())
-            }
+    fun fetchItems(){
+        viewModelScope.launch {
+            items.postValue(itemService.fetchItems())
         }
+    }
 
     fun saveItemDetail(itemDetail: ItemDetail) {
         val document = if (itemDetail.itemDetailId == null || itemDetail.itemDetailId.isEmpty()) {
@@ -41,6 +35,7 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         }
         itemDetail.itemDetailId = document.id
         document.set (itemDetail)
+
         val handle = document.set (itemDetail)
         handle.addOnSuccessListener { Log.d("Firebase","Document Saved")}
         handle.addOnFailureListener { Log.e("Firebase","Document Saved")}

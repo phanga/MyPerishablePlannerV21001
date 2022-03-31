@@ -45,9 +45,11 @@ import com.myperishableplanner.v21001.dto.ItemDetail
 class MainActivity : ComponentActivity() {
 
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    private var selectedItem: Item ? = null
+    private var selectedItem: Item? = null
     private var selectedCategory : Category? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
+    var inItemName = "No item selected"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -73,7 +75,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
@@ -89,9 +90,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    var inItemName = "No item selected"
-    var selecteItem = Item(0, "", "")
 
     @Composable
     fun SaveButton(inCategory : String, inDescription : String, inExpirationDate : String)
@@ -132,7 +130,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                SignIn ()
+                signIn ()
 
             },
             modifier = Modifier.padding(all = Dp(10F)),
@@ -144,38 +142,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun SignIn() {
-        val providers = arrayListOf(
-           AuthUI.IdpConfig.EmailBuilder().build()
-        )
-        val signinIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build()
-
-        signInLauncher.launch(signinIntent)
-    }
-
-    private val signInLauncher = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract())
-    {
-
-        res -> this.signInResult(res)
-    }
-
-    private fun signInResult (result : FirebaseAuthUIAuthenticationResult)
-    {
-       val response = result.idpResponse
-       if (result.resultCode== RESULT_OK) {
-         firebaseUser =  FirebaseAuth.getInstance().currentUser
-       }
-        else
-       {
-           Log.e("MainActivity.kt","Error logging in" + response?.error?.errorCode)
-       }
-    }
-
-
     @Composable
     fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), Categories : List<Category> = ArrayList<Category>()) {
         var inCategory by remember { mutableStateOf(value = "") }
@@ -185,7 +151,7 @@ class MainActivity : ComponentActivity() {
         Column {
 
             TextFieldWithDropdownUsage(itemsIn = items, stringResource(R.string.ItemName))
-                // CatogerySpinner(categories= Categories)
+                // CategorySpinner(categories= Categories)
             //
             OutlinedTextField(
                 value = inDescription,
@@ -215,8 +181,8 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    private @Composable
-    fun CatogerySpinner(categories: List<Category>) {
+    @Composable
+    private fun CategorySpinner(categories: List<Category>) {
         var itemText by remember { mutableStateOf("Select Category")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
@@ -250,8 +216,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-
     @Composable
     fun TextFieldWithDropdownUsage(itemsIn: List<Item>, label: String = "", take: Int = 10) {
 
@@ -283,7 +247,6 @@ class MainActivity : ComponentActivity() {
             label = "Item"
         )
     }
-
 
     @Composable
     fun TextFieldWithDropdown(
@@ -331,12 +294,37 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-
         }
+    }
 
+    private fun signIn() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder().build()
+        )
+        val signInIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
 
+        signInLauncher.launch(signInIntent)
+    }
 
+    private val signInLauncher = registerForActivityResult(
+        FirebaseAuthUIActivityResultContract())
+    {
+
+            res -> this.signInResult(res)
+    }
+
+    private fun signInResult (result : FirebaseAuthUIAuthenticationResult)
+    {
+        val response = result.idpResponse
+        if (result.resultCode== RESULT_OK) {
+            firebaseUser =  FirebaseAuth.getInstance().currentUser
+        }
+        else
+        {
+            Log.e("MainActivity.kt","Error logging in" + response?.error?.errorCode)
+        }
     }
 }
-
-

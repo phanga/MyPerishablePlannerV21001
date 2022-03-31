@@ -17,9 +17,8 @@ class ItemService : IItemService {
     override suspend fun fetchItems() : List <Item>? {
         return withContext(Dispatchers.IO) {
             val service = RetrofitClientInstance.retrofitInstance?.create(IItemDAO::class.java)
-            val items = async { service?.getAllItems()}
-            var result = items.await()?.awaitResponse()?.body()
-            return@withContext result
+            val items = async { service?.getAllItems() }
+            return@withContext items.await()?.awaitResponse()?.body()
         }
     }
 }
