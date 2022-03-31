@@ -20,12 +20,12 @@ class ItemViewModel (var itemService: IItemService = ItemService()) : ViewModel(
 
     private lateinit var firestore: FirebaseFirestore
 
-        init {
-            {
-                firestore = FirebaseFirestore.getInstance()
-                firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-            }
+    init {
+        {
+            firestore = FirebaseFirestore.getInstance()
+            firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
         }
+    }
 
     fun fetchItems(){
         viewModelScope.launch {
@@ -43,9 +43,9 @@ class ItemViewModel (var itemService: IItemService = ItemService()) : ViewModel(
             firestore.collection("itemDetail").document(itemDetail.itemDetailId)
         }
         itemDetail.itemDetailId = document.id
-        document.set (itemDetail)
-        val handle = document.set (itemDetail)
+
+        val handle = document.set(itemDetail)
         handle.addOnSuccessListener { Log.d("Firebase","Document Saved")}
-        handle.addOnFailureListener { Log.e("Firebase","Document Saved")}
+        handle.addOnFailureListener { Log.e("Firebase","Failed to save document")}
     }
 }
