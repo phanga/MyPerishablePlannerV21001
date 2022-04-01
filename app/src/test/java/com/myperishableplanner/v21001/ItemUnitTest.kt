@@ -22,8 +22,6 @@ class ItemUnitTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-
-    lateinit var itemService: ItemService
     lateinit var mvm: ItemViewModel
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
@@ -45,7 +43,7 @@ class ItemUnitTest {
     }
     @Test
     fun `given a item dto when id is 454004 and name is apple then code is 454004 and name is apple`() {
-        var item = Item(454004, "APPLE","TREECRISP 2 GO")
+        val item = Item(454004, "APPLE","TREECRISP 2 GO")
         Assert.assertTrue(item.id.equals(454004))
         Assert.assertTrue(item.name.equals("APPLE"))
         Assert.assertTrue(item.brand.equals("TREECRISP 2 GO"))
@@ -53,7 +51,7 @@ class ItemUnitTest {
 
     @Test
     fun `given a item dto when id is 2104697 and name is watermelon then code is 2104697 and name is watermelon`() {
-        var item = Item(2104697, "WATERMELON","Walgreens Co.")
+        val item = Item(2104697, "WATERMELON","Walgreens Co.")
         Assert.assertTrue(item.id.equals(2104697))
         Assert.assertTrue(item.name.equals("WATERMELON"))
         Assert.assertTrue(item.brand.equals("Walgreens Co."))
@@ -81,7 +79,7 @@ class ItemUnitTest {
 
     private fun thenResultsShouldContainMilk() {
         var allItems: List<Item>? = ArrayList<Item>()
-        val latch = CountDownLatch(1);
+        val latch = CountDownLatch(1)
         val observer = object : Observer<List<Item>> {
             override fun onChanged(t: List<Item>?) {
                 allItems = t
