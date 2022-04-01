@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
     }
 
     var inItemName = "No item selected"
-    var selecteItem = Item(0, "", "")
+    var selectItem = Item(0, "", "")
 
     @Composable
     fun SaveButton(inCategory : String, inDescription : String, inExpirationDate : String)
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                var itemDetail = ItemDetail().apply{
+                val itemDetail = ItemDetail().apply{
                     itemId =  selectedItem?.let { it.id }?:0
                     itemName = inItemName
                     description = inDescription
@@ -216,7 +216,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private @Composable
-    fun CatogerySpinner(categories: List<Category>) {
+    fun CategorySpinner (categories: List<Category>) {
         var itemText by remember { mutableStateOf("Select Category")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
