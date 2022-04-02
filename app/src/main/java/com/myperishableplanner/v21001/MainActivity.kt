@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
-    private var selectedItemDetail : ItemDetail? = null
+    private var selectedItemDetail  by mutableStateOf(ItemDetail())
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth()
 
                     ) {
-                        ExpirationFacts(items,itemDetail)
+                        ExpirationFacts(items,itemDetail, selectedItemDetail)
 
                     }
 
@@ -175,15 +175,15 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), itemDetail : List<ItemDetail> = ArrayList<ItemDetail>()) {
-        var inCategory by remember { mutableStateOf(value = "") }
-        var inDescription by remember { mutableStateOf(value = "") }
-        var inExpirationDate by remember { mutableStateOf(value = "") }
+    fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), itemDetail : List<ItemDetail> = ArrayList<ItemDetail>(), selectedItemDetail : ItemDetail = ItemDetail() ) {
+        var inCategory by remember (selectedItemDetail.itemDetailId){ mutableStateOf(selectedItemDetail.category) }
+        var inDescription by remember (selectedItemDetail.itemDetailId){ mutableStateOf(selectedItemDetail.description )}
+        var inExpirationDate by remember (selectedItemDetail.itemDetailId) { mutableStateOf(selectedItemDetail.expirationDate) }
         val context = LocalContext.current
         Column {
             ItemDetailSpinner(itemDetails =itemDetail)
 
-            TextFieldWithDropdownUsage(itemsIn = items, stringResource(R.string.ItemName))
+            TextFieldWithDropdownUsage(itemsIn = items, label = stringResource(R.string.ItemName), selectedItemDetail = selectedItemDetail)
 
             //
             OutlinedTextField(
@@ -252,10 +252,10 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun TextFieldWithDropdownUsage(itemsIn: List<Item>, label: String = "", take: Int = 10) {
+    fun TextFieldWithDropdownUsage(itemsIn: List<Item>, label: String = "",  selectedItemDetail : ItemDetail = ItemDetail(),take: Int = 10) {
 
         val dropDownOptions = remember { mutableStateOf(listOf<Item>()) }
-        val textFieldValue = remember { mutableStateOf(TextFieldValue()) }
+        val textFieldValue = remember (selectedItemDetail.itemDetailId){ mutableStateOf(TextFieldValue(selectedItemDetail.itemName)) }
         val dropDownExpanded = remember { mutableStateOf(false) }
 
         fun onDropdownDismissRequest() {
