@@ -31,7 +31,7 @@ class ItemUnitTest {
     @MockK
     lateinit var mockItemService: ItemService
     @Before
-    fun populateBooks() {
+    fun populateItems() {
         Dispatchers.setMain(mainThreadSurrogate)
         MockKAnnotations.init(this)
         mvm = ItemViewModel()

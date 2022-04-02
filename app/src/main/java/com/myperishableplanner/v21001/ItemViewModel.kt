@@ -1,6 +1,9 @@
 package com.myperishableplanner.v21001
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,9 +19,10 @@ import kotlin.math.log
 
 class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel() {
 
-
+        internal val NEW_ITEM = "New Item"
         var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
         var itemDetails : MutableLiveData<List<ItemDetail>> = MutableLiveData<List<ItemDetail>>()
+        var selectedItemDetail  by mutableStateOf(ItemDetail())
 
         private lateinit var firestore : FirebaseFirestore
 
@@ -28,6 +32,8 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
                 firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
                 listenToItemDetails()
             }
+
+
 
     private fun listenToItemDetails() {
         firestore.collection("itemDetails").addSnapshotListener{
@@ -40,6 +46,7 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
           // if we reached this point , there was not an error
             snapshot?.let{
                 val allItemDetails = ArrayList <ItemDetail>()
+                allItemDetails.add(ItemDetail(itemName = NEW_ITEM))
                 val document  = snapshot.documents
                 document.forEach{
                     val itemDetail = it.toObject(ItemDetail:: class.java)
@@ -60,15 +67,15 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
             }
         }
 
-    fun saveItemDetail(itemDetail: ItemDetail) {
-        val document = if (itemDetail.itemDetailId == null || itemDetail.itemDetailId.isEmpty()) {
+    fun saveItemDetail() {
+        val document = if (selectedItemDetail.itemDetailId == null || selectedItemDetail.itemDetailId.isEmpty()) {
             firestore.collection("itemDetails").document()
         } else {
-            firestore.collection("itemDetails").document(itemDetail.itemDetailId)
+            firestore.collection("itemDetails").document(selectedItemDetail.itemDetailId)
         }
-        itemDetail.itemDetailId = document.id
-        document.set (itemDetail)
-        val handle = document.set (itemDetail)
+        selectedItemDetail.itemDetailId = document.id
+        document.set (selectedItemDetail)
+        val handle = document.set (selectedItemDetail)
         handle.addOnSuccessListener { Log.d("Firebase","Document Saved")}
         handle.addOnFailureListener { Log.e("Firebase","Document Saved")}
     }
