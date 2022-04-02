@@ -89,7 +89,6 @@ class MainActivity : ComponentActivity() {
     }
 
     var inItemName = "No item selected"
-    var selecteItem = Item(0, "", "")
 
     @Composable
     fun SaveButton(inCategory : String, inDescription : String, inExpirationDate : String)
@@ -100,7 +99,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                var itemDetail = ItemDetail().apply{
+                selectedItemDetail.apply{
                     itemId =  selectedItem?.let { it.id }?:0
                     itemName = inItemName
                     description = inDescription
@@ -108,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     category = inCategory
 
                 }
-                viewModel.saveItemDetail(itemDetail)
+                viewModel.saveItemDetail(selectedItemDetail)
                 Toast.makeText(context, "Selected Product $inItemName", Toast.LENGTH_LONG)
                     .show()
             },
@@ -237,6 +236,8 @@ class MainActivity : ComponentActivity() {
                         expanded = false
                         itemText = itemDetail.toString()
                         selectedItemDetail = itemDetail
+                        selectedItem = Item(id=itemDetail.itemId,name= itemDetail.itemName, brand = "" )
+                        inItemName = itemDetail.itemName
                     })
                     {
                         Text (text = itemDetail.toString() )
