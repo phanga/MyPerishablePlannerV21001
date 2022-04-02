@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
-    private var selectedItemDetail  by mutableStateOf(ItemDetail())
+
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth()
 
                     ) {
-                        ExpirationFacts(items,itemDetail, selectedItemDetail)
+                        ExpirationFacts(items,itemDetail, viewModel.selectedItemDetail)
 
                     }
 
@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(
             onClick = {
-                selectedItemDetail.apply{
+                viewModel.selectedItemDetail.apply{
                     itemId =  selectedItem?.let { it.id }?:0
                     itemName = inItemName
                     description = inDescription
@@ -107,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     category = inCategory
 
                 }
-                viewModel.saveItemDetail(selectedItemDetail)
+                viewModel.saveItemDetail()
                 Toast.makeText(context, "Selected Product $inItemName", Toast.LENGTH_LONG)
                     .show()
             },
@@ -234,10 +234,23 @@ class MainActivity : ComponentActivity() {
                     itemDetails.forEach{
                             itemDetail -> DropdownMenuItem(onClick = {
                         expanded = false
-                        itemText = itemDetail.toString()
-                        selectedItemDetail = itemDetail
-                        selectedItem = Item(id=itemDetail.itemId,name= itemDetail.itemName, brand = "" )
-                        inItemName = itemDetail.itemName
+
+                        if (itemDetail.itemName ==(viewModel.NEW_ITEM)){
+                        //we have a new item
+                            itemText = ""
+                            itemDetail.itemName=""
+                        }
+                        else
+                        {
+                        //we have selected an existing Item
+                            itemText = itemDetail.toString()
+                            viewModel.selectedItemDetail = itemDetail
+                            selectedItem = Item(id=itemDetail.itemId,name= itemDetail.itemName, brand = "" )
+                            inItemName = itemDetail.itemName
+
+                    }
+                        viewModel.selectedItemDetail = itemDetail
+
                     })
                     {
                         Text (text = itemDetail.toString() )
