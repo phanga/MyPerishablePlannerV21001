@@ -38,7 +38,6 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.myperishableplanner.v21001.dto.Category
 import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.dto.ItemDetail
 
@@ -46,16 +45,15 @@ class MainActivity : ComponentActivity() {
 
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
-    private var selectedCategory : Category? = null
+    private var selectedItemDetail : ItemDetail? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             viewModel.fetchItems()
             val items by viewModel.items.observeAsState(initial = emptyList())
-            val categories = ArrayList<Category>()
-            categories.add(Category(1,"Frozen","Below 45 degree"))
-            categories.add(Category(2,"Canned goods","Away from direct Sunlight"))
+            val itemDetail by viewModel.itemDetails.observeAsState(initial= emptyList())
             MyPerishablePlannerTheme {
                 Column {
                     // A surface container using the 'background' color from the theme
@@ -64,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth()
 
                     ) {
-                        ExpirationFacts(items,categories)
+                        ExpirationFacts(items,itemDetail)
 
                     }
 
@@ -177,15 +175,16 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), Categories : List<Category> = ArrayList<Category>()) {
+    fun ExpirationFacts(items: List<Item> = ArrayList<Item>(), itemDetail : List<ItemDetail> = ArrayList<ItemDetail>()) {
         var inCategory by remember { mutableStateOf(value = "") }
         var inDescription by remember { mutableStateOf(value = "") }
         var inExpirationDate by remember { mutableStateOf(value = "") }
         val context = LocalContext.current
         Column {
+            ItemDetailSpinner(itemDetails =itemDetail)
 
             TextFieldWithDropdownUsage(itemsIn = items, stringResource(R.string.ItemName))
-                // CatogerySpinner(categories= Categories)
+
             //
             OutlinedTextField(
                 value = inDescription,
@@ -216,8 +215,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private @Composable
-    fun CatogerySpinner(categories: List<Category>) {
-        var itemText by remember { mutableStateOf("Select Category")}
+    fun ItemDetailSpinner(itemDetails: List<ItemDetail>) {
+        var itemText by remember { mutableStateOf("Select Item detail")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
             Row(Modifier
@@ -230,17 +229,17 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                Text(text=itemText, fontSize = 15.sp , modifier=Modifier.padding(end = 6.dp))
+                Text(text=itemText, fontSize = 15.sp , modifier=Modifier.padding(end = 8.dp))
                 Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
                 DropdownMenu(expanded = expanded, onDismissRequest = {expanded = false}) {
-                    categories.forEach{
-                            category -> DropdownMenuItem(onClick = {
+                    itemDetails.forEach{
+                            itemDetail -> DropdownMenuItem(onClick = {
                         expanded = false
-                        itemText = category.toString()
-                        selectedCategory = category
+                        itemText = itemDetail.toString()
+                        selectedItemDetail = itemDetail
                     })
                     {
-                        Text (text = category.toString() )
+                        Text (text = itemDetail.toString() )
                     }
                     }
 
@@ -296,7 +295,7 @@ class MainActivity : ComponentActivity() {
         label: String = ""
     ) {
         Box(modifier) {
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
