@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.FirebaseFirestore
 import com.myperishableplanner.v21001.dto.ItemDetail
+import com.myperishableplanner.v21001.dto.User
 import kotlin.math.log
 
 
@@ -23,6 +24,7 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         var items : MutableLiveData<List<Item>> = MutableLiveData<List<Item>>()
         var itemDetails : MutableLiveData<List<ItemDetail>> = MutableLiveData<List<ItemDetail>>()
         var selectedItemDetail  by mutableStateOf(ItemDetail())
+        var user: User? = null
 
         private lateinit var firestore : FirebaseFirestore
 
@@ -30,33 +32,35 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
             {
                 firestore = FirebaseFirestore.getInstance()
                 firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-                listenToItemDetails()
             }
 
 
 
-    private fun listenToItemDetails() {
-        firestore.collection("itemDetails").addSnapshotListener{
-            snapshot, e ->
-            //handle the error if there is one , and then return
-            if (e !=null){
-                Log.w("Listen failed",e)
-                return@addSnapshotListener
-            }
-          // if we reached this point , there was not an error
-            snapshot?.let{
-                val allItemDetails = ArrayList <ItemDetail>()
-                allItemDetails.add(ItemDetail(itemName = NEW_ITEM))
-                val document  = snapshot.documents
-                document.forEach{
-                    val itemDetail = it.toObject(ItemDetail:: class.java)
-                    itemDetail?.let{
-                        allItemDetails.add(it)
+    fun listenToItemDetails() {
+        user?.let {
+            user ->
+            firestore.collection("users").document(user.uid).collection("itemDetails")
+                .addSnapshotListener { snapshot, e ->
+                    //handle the error if there is one , and then return
+                    if (e != null) {
+                        Log.w("Listen failed", e)
+                        return@addSnapshotListener
                     }
-                }
-                itemDetails.value = allItemDetails
-            }
+                    // if we reached this point , there was not an error
+                    snapshot?.let {
+                        val allItemDetails = ArrayList<ItemDetail>()
+                        allItemDetails.add(ItemDetail(itemName = NEW_ITEM))
+                        val document = snapshot.documents
+                        document.forEach {
+                            val itemDetail = it.toObject(ItemDetail::class.java)
+                            itemDetail?.let {
+                                allItemDetails.add(it)
+                            }
+                        }
+                        itemDetails.value = allItemDetails
+                    }
 
+                }
         }
     }
 
@@ -68,15 +72,30 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         }
 
     fun saveItemDetail() {
-        val document = if (selectedItemDetail.itemDetailId == null || selectedItemDetail.itemDetailId.isEmpty()) {
-            firestore.collection("itemDetails").document()
-        } else {
-            firestore.collection("itemDetails").document(selectedItemDetail.itemDetailId)
+
+        user?.let { user ->
+            val document =
+                if (selectedItemDetail.itemDetailId == null || selectedItemDetail.itemDetailId.isEmpty()) {
+                    firestore.collection("users").document(user.uid).collection("itemDetails").document()
+                } else {
+                    firestore.collection("users").document(user.uid).collection("itemDetails").document(selectedItemDetail.itemDetailId)
+                }
+            selectedItemDetail.itemDetailId = document.id
+            document.set(selectedItemDetail)
+            val handle = document.set(selectedItemDetail)
+            handle.addOnSuccessListener { Log.d("Firebase", "Document Saved") }
+            handle.addOnFailureListener { Log.e("Firebase", "Document Saved") }
         }
-        selectedItemDetail.itemDetailId = document.id
-        document.set (selectedItemDetail)
-        val handle = document.set (selectedItemDetail)
-        handle.addOnSuccessListener { Log.d("Firebase","Document Saved")}
-        handle.addOnFailureListener { Log.e("Firebase","Document Saved")}
     }
+
+    fun saveUser() {
+        user?.let {
+            user ->
+            val handle=  firestore.collection("users").document(user.uid).set(user)
+            handle.addOnSuccessListener { Log.d("Firebase","Document Saved")}
+            handle.addOnFailureListener { Log.e("Firebase","Document Saved")}
+        }
+        }
+
+
 }
