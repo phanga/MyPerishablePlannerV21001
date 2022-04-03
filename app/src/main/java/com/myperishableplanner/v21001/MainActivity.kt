@@ -40,17 +40,22 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.dto.ItemDetail
+import com.myperishableplanner.v21001.dto.User
 
 class MainActivity : ComponentActivity() {
 
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
-
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            firebaseUser?.let{
+                val user = User(it.uid,"")
+                viewModel.user =user
+                viewModel.listenToItemDetails()
+            }
             viewModel.fetchItems()
             val items by viewModel.items.observeAsState(initial = emptyList())
             val itemDetail by viewModel.itemDetails.observeAsState(initial= emptyList())
@@ -165,6 +170,11 @@ class MainActivity : ComponentActivity() {
        val response = result.idpResponse
        if (result.resultCode== RESULT_OK) {
          firebaseUser =  FirebaseAuth.getInstance().currentUser
+           firebaseUser?.let {
+               val user =User(it.uid, it.displayName)
+               viewModel.user =user
+               viewModel.saveUser()
+           }
        }
         else
        {
@@ -215,7 +225,7 @@ class MainActivity : ComponentActivity() {
 
     private @Composable
     fun ItemDetailSpinner(itemDetails: List<ItemDetail>) {
-        var itemText by remember { mutableStateOf("Select Item detail")}
+        var itemText by remember { mutableStateOf("Select Item")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
             Row(Modifier
