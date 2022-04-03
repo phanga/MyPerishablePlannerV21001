@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "525862670759",
+    "firebase_url": "https://myperishableplanner-default-rtdb.firebaseio.com",
     "project_id": "myperishableplanner",
     "storage_bucket": "myperishableplanner.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "525862670759-i7dlk1lc3v9uphl835bjv608oct6i4ic.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myperishableplanner.v21001",
+            "certificate_hash": "6691c03eedce0f31fcf1bf7eab4153647bb8fe43"
+          }
+        },
         {
           "client_id": "525862670759-s7hummrjr7l5bkk2gusa4un6lq8tov46.apps.googleusercontent.com",
           "client_type": 3
