@@ -1,10 +1,18 @@
 package com.myperishableplanner.v21001
 
+import android.Manifest
+import android.app.Activity
+import android.content.ContentValues.TAG
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -33,6 +41,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -41,9 +51,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.myperishableplanner.v21001.dto.Item
 import com.myperishableplanner.v21001.dto.ItemDetail
 import com.myperishableplanner.v21001.dto.User
+import java.io.File
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivity : ComponentActivity() {
 
+    private val strUri by mutableStateOf("")
+    private var uri: Uri? =null
+    private lateinit  var currentImagePath: String
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
@@ -216,13 +235,108 @@ class MainActivity : ComponentActivity() {
                 label = { Text(text = stringResource(R.string.expirationDate)) },
                 modifier = Modifier.fillMaxWidth()
             )
+            Row (modifier = Modifier.padding(all=2.dp)){
+                SaveButton(inCategory,inDescription,inExpirationDate)
+                AuthenticationButton()
+                TakePhotoButton()
 
-            SaveButton(inCategory,inDescription,inExpirationDate)
-            AuthenticationButton()
+            }
 
         }
+    }
+
+    @Composable
+    fun TakePhotoButton() {
+        Button(
+            onClick = {
+                takePhoto()
+
+            },
+            modifier = Modifier.padding(all = Dp(10F)),
+            enabled = true,
+            border = BorderStroke(width = 1.dp, brush = SolidColor(Color.Blue)),
+            shape = MaterialTheme.shapes.medium,
+        ) {
+            Text(text = "Photo", color = Color.White)
+        }
+
 
     }
+
+
+    private fun takePhoto() {
+        if (hasCamerapermission()==PERMISSION_GRANTED && hasEXternalStoragePermission()==PERMISSION_GRANTED){
+            //The user has already granted permission for these activities. Toggle the camera
+            invokeCamera()
+
+        }
+        else
+        {
+            //The user has not granted permission, so we must request
+
+            requestMultiplePermissionLauncher.launch(arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+            ))
+        }
+    }
+
+    private val requestMultiplePermissionLauncher =registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
+    resultsMap ->
+        var permissionGranted = false
+        resultsMap.forEach{
+            if(it.value==true) {
+                permissionGranted = it.value
+            }else
+            {
+                permissionGranted = false
+                return@forEach
+            }
+        }
+        if (permissionGranted){
+            invokeCamera()
+        }
+        else{
+            Toast.makeText(this,getString(R.string.cameraPermissionDenied),Toast.LENGTH_LONG).show()
+        }
+    }
+    private fun invokeCamera() {
+        val file = createImageFile()
+        try{
+            uri = FileProvider.getUriForFile(this,"",file)
+        }catch (e:Exception){
+            Log.e(TAG,"${e.message}")
+            var foo =e.message
+        }
+        getCameraImage.launch(uri)
+    }
+    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture())
+    {
+        success ->
+        if(success){
+            Log.i(TAG,"Image Location: $uri")
+        }
+        else{
+            Log.e(TAG,"Image not saved.$uri")
+        }
+
+
+    }
+
+    private fun createImageFile(): File {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "ItemDetail_${timestamp}",
+            ".jpg",
+            imageDirectory
+        ).apply{
+            currentImagePath = absolutePath
+        }
+    }
+
+    fun hasCamerapermission() = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+    fun hasEXternalStoragePermission() = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     private @Composable
     fun ItemDetailSpinner(itemDetails: List<ItemDetail>) {
