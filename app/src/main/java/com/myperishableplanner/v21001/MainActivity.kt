@@ -259,6 +259,7 @@ class MainActivity : ComponentActivity() {
         ) {
             Text(text = "Photo", color = Color.White)
         }
+        AsyncImage(model = strUri, contentDescription= "Item Image")
 
 
     }
