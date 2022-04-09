@@ -1,5 +1,7 @@
 package com.myperishableplanner.v21001
 
+import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,7 +16,9 @@ import kotlinx.coroutines.launch
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.FirebaseFirestore
 import com.myperishableplanner.v21001.dto.ItemDetail
+import com.myperishableplanner.v21001.dto.Photo
 import com.myperishableplanner.v21001.dto.User
+import com.google.firebase.storage.FirebaseStorage
 import kotlin.math.log
 
 
@@ -25,8 +29,9 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         var itemDetails : MutableLiveData<List<ItemDetail>> = MutableLiveData<List<ItemDetail>>()
         var selectedItemDetail  by mutableStateOf(ItemDetail())
         var user: User? = null
-
+        val photos : ArrayList<Photo> = ArrayList<Photo>()
         private lateinit var firestore : FirebaseFirestore
+        private var storageReference = FirebaseStorage.getInstance().getReference()
 
         init
             {
@@ -83,7 +88,11 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
             selectedItemDetail.itemDetailId = document.id
             document.set(selectedItemDetail)
             val handle = document.set(selectedItemDetail)
-            handle.addOnSuccessListener { Log.d("Firebase", "Document Saved") }
+            handle.addOnSuccessListener { Log.d("Firebase", "Document Saved")
+                if (photos.isNotEmpty()) {
+                    uploadPhotos()
+                }
+            }
             handle.addOnFailureListener { Log.e("Firebase", "Document Saved") }
         }
     }
@@ -97,5 +106,41 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
         }
         }
 
+    private fun uploadPhotos() {
+        photos.forEach {
+                photo ->
+            var uri = Uri.parse(photo.localUri)
+            val imageRef = storageReference.child("images/${user?.uid}/${uri.lastPathSegment}")
+            val uploadTask  = imageRef.putFile(uri)
+            uploadTask.addOnSuccessListener {
+                Log.i(TAG, "Image Uploaded $imageRef")
+                val downloadUrl = imageRef.downloadUrl
+                downloadUrl.addOnSuccessListener {
+                        remoteUri ->
+                    photo.remoteUri = remoteUri.toString()
+                    updatePhotoDatabase(photo)
 
+                }
+            }
+            uploadTask.addOnFailureListener {
+                Log.e(TAG, it.message ?: "No message")
+            }
+        }
+    }
+
+    private fun updatePhotoDatabase(photo: Photo) {
+        user?.let {
+                user ->
+            var photoCollection = firestore.collection("users").document(user.uid).collection("itemDetails").document(selectedItemDetail.itemDetailId).collection("photos")
+            var handle = photoCollection.add(photo)
+            handle.addOnSuccessListener {
+                Log.i(TAG, "Successfully updated photo metadata")
+                photo.id = it.id
+                firestore.collection("users").document(user.uid).collection("itemDetails").document(selectedItemDetail.itemDetailId).collection("photos").document(photo.id).set(photo)
+            }
+            handle.addOnFailureListener {
+                Log.e(TAG, "Error updating photo data: ${it.message}")
+            }
+        }
+    }
 }
