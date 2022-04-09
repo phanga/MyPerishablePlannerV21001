@@ -56,11 +56,13 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import coil.compose.AsyncImage
+import com.myperishableplanner.v21001.dto.Photo
 
 
 class MainActivity : ComponentActivity() {
 
-    private val strUri by mutableStateOf("")
+    private var strUri by mutableStateOf("")
     private var uri: Uri? =null
     private lateinit  var currentImagePath: String
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -241,7 +243,7 @@ class MainActivity : ComponentActivity() {
                 TakePhotoButton()
 
             }
-
+            AsyncImage(model = strUri, contentDescription= "Item Image")
         }
     }
 
@@ -303,7 +305,7 @@ class MainActivity : ComponentActivity() {
     private fun invokeCamera() {
         val file = createImageFile()
         try{
-            uri = FileProvider.getUriForFile(this,"",file)
+            uri = FileProvider.getUriForFile(this,"com.myperishableplanner.v21001.fileprovider",file)
         }catch (e:Exception){
             Log.e(TAG,"${e.message}")
             var foo =e.message
@@ -315,6 +317,9 @@ class MainActivity : ComponentActivity() {
         success ->
         if(success){
             Log.i(TAG,"Image Location: $uri")
+             strUri = uri.toString()
+            val photo = Photo(localUri = uri.toString())
+            viewModel.photos.add(photo)
         }
         else{
             Log.e(TAG,"Image not saved.$uri")
