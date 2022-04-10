@@ -86,7 +86,6 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
                     firestore.collection("users").document(user.uid).collection("itemDetails").document(selectedItemDetail.itemDetailId)
                 }
             selectedItemDetail.itemDetailId = document.id
-            document.set(selectedItemDetail)
             val handle = document.set(selectedItemDetail)
             handle.addOnSuccessListener { Log.d("Firebase", "Document Saved")
                 if (photos.isNotEmpty()) {
@@ -102,7 +101,7 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
             user ->
             val handle=  firestore.collection("users").document(user.uid).set(user)
             handle.addOnSuccessListener { Log.d("Firebase","Document Saved")}
-            handle.addOnFailureListener { Log.e("Firebase","Document Saved")}
+            handle.addOnFailureListener { Log.e("Firebase","Failed to save document")}
         }
         }
 
