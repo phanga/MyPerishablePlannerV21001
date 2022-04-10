@@ -12,6 +12,6 @@ data class Item(@SerializedName("fdcId") var id: Int, @SerializedName("descripti
         else {
             prefix =brand
         }
-        return name + "-" + brand
+        return "$name - $prefix"
     }
 }
