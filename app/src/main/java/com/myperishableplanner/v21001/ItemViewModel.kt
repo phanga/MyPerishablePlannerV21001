@@ -155,23 +155,32 @@ class ItemViewModel (var itemService: IItemService = ItemService()): ViewModel()
 
         fun fetchPhotos() {
             photos.clear()
+            var inPhotos = ArrayList<Photo>()
             user?.let {
                     user ->
-                var photoCollection = firestore.collection("users").document(user.uid).collection("itemDetails").document(selectedItemDetail.itemDetailId).collection("photos")
-                var photosListener = photoCollection.addSnapshotListener {
-                        querySnapshot, firebaseFirestoreException ->
-                    querySnapshot?.let {
-                            querySnapshot ->
-                        var documents = querySnapshot.documents
-                        var inPhotos = ArrayList<Photo>()
-                        documents?.forEach {
-                            var photo = it.toObject(Photo::class.java)
-                            photo?.let {
-                            inPhotos.add(photo)                      }
-                    }
-                    eventPhotos.value = inPhotos
+                var test = selectedItemDetail.itemDetailId
+                if (selectedItemDetail.itemDetailId != null && selectedItemDetail.itemDetailId.isNotEmpty()) {
+                    var photoCollection =
+                        firestore.collection("users").document(user.uid).collection("itemDetails")
+                            .document(selectedItemDetail.itemDetailId).collection("photos")
+                    var photosListener =
+                        photoCollection.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                            querySnapshot?.let { querySnapshot ->
+                                var documents = querySnapshot.documents
+
+                                documents?.forEach {
+                                    var photo = it.toObject(Photo::class.java)
+                                    photo?.let {
+                                        inPhotos.add(photo)
+                                    }
+                                }
+                                eventPhotos.value = inPhotos
+                            }
+                        }
                 }
-            }
+                else
+                    eventPhotos.value = inPhotos
+
         }
      }
 

@@ -348,6 +348,7 @@ class MainActivity : ComponentActivity() {
     fun ItemDetailSpinner(itemDetails: List<ItemDetail>) {
         var itemText by remember { mutableStateOf("Select Item")}
         var expanded by remember { mutableStateOf(false)}
+
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
             Row(Modifier
                 .padding(6.dp)
@@ -370,6 +371,8 @@ class MainActivity : ComponentActivity() {
                         //we have a new item
                             itemText = ""
                             itemDetail.itemName=""
+                            viewModel.listenToItemDetails()
+
                         }
                         else
                         {
