@@ -7,4 +7,5 @@
     <string name="ItemName">Item Name</string>
     <string name="StorageInstruction">Storage Instruction</string>
     <string name="cameraPermissionDenied">Unable to load without permission.</string>
+    <string name="PhotoDescription">PhotoDescription</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.myperishableplanner.v21001
 
 import android.Manifest
-import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
@@ -11,18 +10,24 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.typography
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -243,7 +248,7 @@ class MainActivity : ComponentActivity() {
                 TakePhotoButton()
 
             }
-            AsyncImage(model = strUri, contentDescription= "Item Image")
+            Events()
         }
     }
 
@@ -312,20 +317,16 @@ class MainActivity : ComponentActivity() {
         }
         getCameraImage.launch(uri)
     }
-    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture())
-    {
-        success ->
-        if(success){
-            Log.i(TAG,"Image Location: $uri")
-             strUri = uri.toString()
+    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            success ->
+        if (success) {
+            Log.i(TAG, "Image Location: $uri")
+            strUri = uri.toString()
             val photo = Photo(localUri = uri.toString())
             viewModel.photos.add(photo)
+        } else {
+            Log.e(TAG, "Image not saved. $uri")
         }
-        else{
-            Log.e(TAG,"Image not saved.$uri")
-        }
-
-
     }
 
     private fun createImageFile(): File {
@@ -380,6 +381,7 @@ class MainActivity : ComponentActivity() {
 
                     }
                         viewModel.selectedItemDetail = itemDetail
+                        viewModel.fetchPhotos()
 
                     })
                     {
@@ -387,7 +389,7 @@ class MainActivity : ComponentActivity() {
                     }
                     }
 
-            }
+             }
             }
 
         }
@@ -479,6 +481,89 @@ class MainActivity : ComponentActivity() {
 
 
 
+    }
+    @Composable
+    private fun Events () {
+        val photos by viewModel.eventPhotos.observeAsState(initial = emptyList())
+        LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical=8.dp), modifier = Modifier.fillMaxHeight()) {
+            items (
+                items = photos,
+                itemContent = {
+                    EventListItem(photo = it)
+                }
+            )
+        }
+    }
+
+    @Composable
+    fun EventListItem(photo: Photo) {
+        var inDescription by remember(photo.id) { mutableStateOf(photo.description)}
+        Card (
+            modifier = Modifier
+                .padding(horizontal = 1.dp, vertical = 1.dp)
+                .fillMaxWidth(),
+            elevation = 8.dp,
+            backgroundColor = Color.White,
+            contentColor = contentColorFor(backgroundColor),
+            shape = RoundedCornerShape(20.dp),
+            border = BorderStroke(1.dp, Color.Green)
+                )
+        {
+            Row {
+                Column(Modifier.weight(2f)) {
+                    AsyncImage(
+                        model = photo.localUri,
+                        contentDescription = "Event Image",
+                        Modifier.width(64.dp).height(64.dp)
+                    )
+                }
+                Column(Modifier.weight(4f)) {
+                    Text(text = photo.id, style = typography.h6)
+                    Text(text = photo.dateTaken.toString(), style = typography.caption)
+                    OutlinedTextField(
+                        value = inDescription,
+                        onValueChange = { inDescription = it },
+                        label = { Text(stringResource(R.string.PhotoDescription)) },
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 3.dp),
+                    )
+                }
+                Column(Modifier.weight(1f)) {
+                    Button(
+                        onClick = {
+                            photo.description = inDescription
+                            save(photo)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Save",
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            delete(photo)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun delete(photo: Photo) {
+        viewModel.delete(photo)
+
+    }
+
+    private fun save(photo: Photo) {
+        viewModel.updatePhotoDatabase(photo)
     }
 }
 
