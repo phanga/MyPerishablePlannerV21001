@@ -24,7 +24,7 @@ class ItemUnitTest {
 
 
     lateinit var itemService: ItemService
-    lateinit var mvm: ItemViewModel
+    lateinit var mvm: ItemDetailViewModel
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -34,7 +34,7 @@ class ItemUnitTest {
     fun populateItems() {
         Dispatchers.setMain(mainThreadSurrogate)
         MockKAnnotations.init(this)
-        mvm = ItemViewModel()
+        mvm = ItemDetailViewModel()
 
     }
 
@@ -61,13 +61,13 @@ class ItemUnitTest {
     private fun givenViewModelIsInitializedWithMockData() {
         val items = ArrayList<Item>()
         items.add(Item(1, "Milk", "Milk"))
-        coEvery {mockItemService.fetchItems()} returns items
+        coEvery {mockItemService.fetchAllItems()} returns items
 
         mvm.itemService =mockItemService
     }
 
     private fun whenJSONDataAreReadAndParsed() {
-        mvm.fetchItems()
+        mvm.fetchAllItems()
         var test= "test"
     }
 

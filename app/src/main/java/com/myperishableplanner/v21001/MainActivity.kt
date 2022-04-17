@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
     private lateinit  var currentImagePath: String
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var selectedItem: Item ? = null
-    private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
+    private val viewModel: ItemDetailViewModel by viewModel<ItemDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                 viewModel.user =user
                 viewModel.listenToItemDetails()
             }
-            viewModel.fetchItems()
+            viewModel.fetchAllItems()
             val items by viewModel.items.observeAsState(initial = emptyList())
             val itemDetail by viewModel.itemDetails.observeAsState(initial= emptyList())
             MyPerishablePlannerTheme {
