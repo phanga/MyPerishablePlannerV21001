@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,9 +15,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -39,12 +45,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -107,6 +117,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         MyPerishablePlannerTheme {
+
             Column {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -126,7 +137,7 @@ class MainActivity : ComponentActivity() {
     {
         Row(modifier = Modifier.padding(all = 2.dp)) {
         }
-
+        val openDialog = remember { mutableStateOf(false) }
         val context = LocalContext.current
         Button(
             onClick = {
@@ -136,7 +147,7 @@ class MainActivity : ComponentActivity() {
                     description = inDescription
                     expirationDate = inExpirationDate
                     category = inCategory
-
+                    openDialog.value = true
                 }
                 viewModel.saveItemDetail()
                 Toast.makeText(context, "Selected Product $inItemName", Toast.LENGTH_LONG)
@@ -148,6 +159,33 @@ class MainActivity : ComponentActivity() {
             shape = MaterialTheme.shapes.medium,
         ) {
             Text(text = "Save", color = Color.White)
+        }
+        if (openDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                title = {
+                    Text(text = "", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                },
+                // below line is use to display
+                // description to our alert dialog.
+                text = {
+                    Text("Your item has been saved", fontSize = 16.sp)
+                },
+                // in below line we are displaying
+                // our confirm button.
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            openDialog.value = false
+                        }) {
+                        Text("Acknowledge",style = TextStyle(color = Color.White))
+                    }
+                },
+                backgroundColor = Color.Gray,
+                contentColor = Color.White
+            )
         }
     }
 
@@ -568,6 +606,7 @@ class MainActivity : ComponentActivity() {
     private fun save(photo: Photo) {
         viewModel.updatePhotoDatabase(photo)
     }
+
 }
 
 
