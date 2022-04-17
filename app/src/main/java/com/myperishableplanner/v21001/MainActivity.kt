@@ -104,12 +104,27 @@ class MainActivity : ComponentActivity() {
 
                     ) {
                         ExpirationFacts(items,itemDetail, viewModel.selectedItemDetail)
-
+                        ExpireAlertDemo()
                     }
 
                 }
             }
         }
+    }
+    @Composable
+    fun ExpireAlertDemo() {
+        val openDialog = remember { mutableStateOf(false) }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Button(onClick = { openDialog.value = true }) {
+                Text(text = "Test Expire Alert")
+            }
+
+        }
+
     }
 
 
@@ -555,7 +570,9 @@ class MainActivity : ComponentActivity() {
                     AsyncImage(
                         model = photo.localUri,
                         contentDescription = "Event Image",
-                        Modifier.width(64.dp).height(64.dp)
+                        Modifier
+                            .width(64.dp)
+                            .height(64.dp)
                     )
                 }
                 Column(Modifier.weight(4f)) {
@@ -565,7 +582,8 @@ class MainActivity : ComponentActivity() {
                         value = inDescription,
                         onValueChange = { inDescription = it },
                         label = { Text(stringResource(R.string.PhotoDescription)) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(vertical = 3.dp),
                     )
                 }
