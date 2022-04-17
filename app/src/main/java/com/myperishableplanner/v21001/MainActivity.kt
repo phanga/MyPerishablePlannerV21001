@@ -124,7 +124,29 @@ class MainActivity : ComponentActivity() {
             }
 
         }
-
+        if (openDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                title = {
+                    Text(text = "Alert Dialog", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                },
+                text = {
+                    Text("Your item 'Example' is passed its due date!", fontSize = 16.sp)
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            openDialog.value = false
+                        }) {
+                        Text("Acknowledge",style = TextStyle(color = Color.White))
+                    }
+                },
+                backgroundColor = Color.Gray,
+                contentColor = Color.White
+            )
+        }
     }
 
 
@@ -183,13 +205,9 @@ class MainActivity : ComponentActivity() {
                 title = {
                     Text(text = "", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 },
-                // below line is use to display
-                // description to our alert dialog.
                 text = {
                     Text("Your item has been saved", fontSize = 16.sp)
                 },
-                // in below line we are displaying
-                // our confirm button.
                 confirmButton = {
                     TextButton(
                         onClick = {
